@@ -30,7 +30,12 @@ theme.fg_normal     = "#ffffff"
 theme.fg_focus      = "#ffffff"
 -- theme.fg_urgent     = "#ffffff"
 
-theme.wibar_bg      = "#000000"
+theme.wibar_bg      = "#eb7236" .. "44"
+
+theme.menu_width     = 200
+theme.menu_font      = "SF Display 10"
+theme.menu_bg_normal = "#ea7135" .. "55"
+theme.menu_bg_focus  = "#ea7135" .. "70"
 
 
 -- =========================
@@ -47,4 +52,5 @@ theme.titlebar_maximized_button_normal_inactive = themes_path.."icons/maximized_
 theme.titlebar_maximized_button_focus_inactive = theme.titlebar_maximized_button_normal_inactive
 theme.titlebar_maximized_button_normal_active = themes_path.."icons/maximized_active.svg"
 theme.titlebar_maximized_button_focus_active = theme.titlebar_maximized_button_normal_active
+
 return theme

@@ -25,7 +25,11 @@ globalkeys = gears.table.join(
 
 	-- Open Launcher (user-config.lua)  Mod + Enter
 	awful.key({ modkey, }, "d", function () awful.spawn(app_launcher) end,
-	          { description = "open launcher", group = "launcher"})
+			  { description = "open launcher", group = "launcher"}),
+			  
+	-- Window switcher  Mod + Tab
+	awful.key({ modkey, }, "Tab", function () awful.client.cycle() end,
+			  { description = "cycle clients", group = "awesome"})
 )
 
 

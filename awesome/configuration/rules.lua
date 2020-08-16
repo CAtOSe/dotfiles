@@ -73,6 +73,11 @@ awful.rules.rules = {
       }, properties = { titlebars_enabled = true }
     },
 
+	-- Disable titlebar for Nautilus
+    --{ rule_any = {class = { "Org.gnome.Nautilus" }
+    --  }, properties = { titlebars_enabled = false }
+    --},
+
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
