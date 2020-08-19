@@ -306,6 +306,11 @@ end
 
 -- Removes app from lists and deletes the icon
 local function remove_app(s, c)
+    if app_cache[c.class] == nil then
+        -- Removing a client that doesn't exist
+        return
+    end
+    
     local icon_layout = s.dock_bar.widget.second.widget
     get_focused_class()
 
@@ -429,6 +434,10 @@ end)
 
 client.connect_signal("unfocus", function (c)
     get_focused_class()
+    if app_cache[c.class] == nil then
+        -- Unfocused a weird client
+        return
+    end
     update_icon(screen[dock_screen], c.class)
     app_cache[c.class].last_focused = c.pid
 end)
