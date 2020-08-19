@@ -27,9 +27,23 @@ globalkeys = gears.table.join(
 	awful.key({ modkey, }, "d", function () awful.spawn(app_launcher) end,
 			  { description = "open launcher", group = "launcher"}),
 			  
-	-- Window switcher  Mod + Tab
-	awful.key({ modkey, }, "Tab", function () awful.client.cycle() end,
-			  { description = "cycle clients", group = "awesome"})
+	-- Switch focus to last client  Mod + Tab
+	awful.key({ modkey, }, "Tab", function () 
+		awful.client.focus.history.previous()
+
+		if client.focus then
+			client.focus:raise()
+		end
+	end,
+	{ description = "focus last client", group = "awesome"}),
+
+	-- Kill focused client  Mod + Shift + Q
+	awful.key({ modkey, "Shift" }, "q", function ()
+		if client.focus then
+			client.focus:kill()
+		end
+	end,
+	{ description = "kill client", group = "awesome"})
 )
 
 
@@ -54,10 +68,15 @@ for i = 1, 4 do
 		awful.key({ modkey, "Shift" }, "#" .. i + 9,
 		function ()
 			if client.focus then
+				local c = client.focus
+
 				local tag = client.focus.screen.tags[i]
 				if tag then
 					client.focus:move_to_tag(tag)
 				end
+				
+				-- Make sure client is not moved off screen
+				awful.placement.no_offscreen(c)
 			end
 		end,
 		{description = "move focused client to tag #"..i, group = "tag"})
