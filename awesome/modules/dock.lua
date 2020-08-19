@@ -398,7 +398,17 @@ create_dock(screen[dock_screen])
 
 -- Call update_dock when adding/removeing clients
 client.connect_signal("manage", function(c)
-    if c and c.valid then
+    if c.class == nil then
+        -- Some clients don't have a class or set it afterwards (Spotify)
+        c:connect_signal("property::class", function(c)
+            if c.valid then
+                add_app(screen[dock_screen], c)
+            end
+        end)
+        return
+    end
+
+    if c.valid then
         add_app(screen[dock_screen], c)
     end
 end)
