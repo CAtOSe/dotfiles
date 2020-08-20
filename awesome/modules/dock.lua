@@ -306,6 +306,11 @@ end
 
 -- Removes app from lists and deletes the icon
 local function remove_app(s, c)
+    if app_cache[c.class] == nil then
+        -- Removing a client that doesn't exist
+        return
+    end
+    
     local icon_layout = s.dock_bar.widget.second.widget
     get_focused_class()
 
@@ -398,7 +403,17 @@ create_dock(screen[dock_screen])
 
 -- Call update_dock when adding/removeing clients
 client.connect_signal("manage", function(c)
-    if c and c.valid then
+    if c.class == nil then
+        -- Some clients don't have a class or set it afterwards (Spotify)
+        c:connect_signal("property::class", function(c)
+            if c.valid then
+                add_app(screen[dock_screen], c)
+            end
+        end)
+        return
+    end
+
+    if c.valid then
         add_app(screen[dock_screen], c)
     end
 end)
@@ -419,6 +434,10 @@ end)
 
 client.connect_signal("unfocus", function (c)
     get_focused_class()
+    if app_cache[c.class] == nil then
+        -- Unfocused a weird client
+        return
+    end
     update_icon(screen[dock_screen], c.class)
     app_cache[c.class].last_focused = c.pid
 end)
