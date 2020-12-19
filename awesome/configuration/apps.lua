@@ -1,4 +1,4 @@
-local icon_theme_path = "/usr/share/icons/Papirus/48x48/apps/"
+local icon_theme_path = icon_theme .. "48x48/apps/"
 
 local apps = {}
 
@@ -8,13 +8,21 @@ apps.app_icons = {
     kitty = icon_theme_path .. "kitty.svg",
     ["figma-linux"] = icon_theme_path .. "figma.svg",
     ["Xephyr"] = icon_theme_path .. "activity-log-manager.svg",
-    ["Org.gnome.Nautilus"] = icon_theme_path .. "org.gnome.files.svg"
+    ["Org.gnome.Nautilus"] = icon_theme_path .. "system-file-manager.svg",
+    ["rofi"] = icon_theme_path .. "applications-all.svg",
+    ["Spotify"] = icon_theme_path .. "spotify.svg",
+    ["discord"] = icon_theme_path .. "discord.svg"
 }
 
 -- NOTE: Pinned apps MUST have an app_icon.
 -- I might implement an automatic icon search later.
 
 apps.pinned = {
+    {
+        name = "App Launcher",
+        launcher = app_launcher,
+        class = "rofi"
+    },
     {
         name = "Firefox",
         launcher = "firefox",
@@ -34,6 +42,16 @@ apps.pinned = {
         name = "Kitty",
         launcher = "kitty",
         class = "kitty"
+    },
+    {
+        name = "Spotify",
+        launcher = "spotify",
+        class = "Spotify"
+    },
+    {
+        name = "Discord",
+        launcher = "discord",
+        class = "discord"
     },
 }
 

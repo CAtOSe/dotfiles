@@ -1,0 +1,113 @@
+configuration {
+	font: "Inter Regular 10";
+	show-icons: true;
+	drun-display-format: "{name}";
+	threads: 0;
+	matching: "fuzzy";
+	disable-history: false;
+	window-thumbnail: true;
+}
+
+* {
+  transparent: #00000000;
+  fg: #fefefeff;
+  bg-search: #96C1D9AA;
+  bg: #424B59AA;
+  selected: #988FCFAA;
+}
+
+window {
+  transparency: "real";
+  background-color: @transparent;
+  text-color: @fg; 
+  width: 33%;
+}
+
+prompt {
+  enabled: false;
+}
+
+button {
+	action: "ok";
+	str: "";
+	font: "Material Icons 14";
+	expand: false;
+	text-color: @fg;
+	background-color: @transparent;
+	vertical-align: 0.7;
+	horizontal-align: 0.5;
+}
+
+entry {
+	font: "Inter Regular 11";
+	background-color: @transparent;
+	text-color: @fg;
+	expand: true;
+	vertical-align: 0.5;
+	placeholder: "Search...";
+	placeholder-color: @fg;
+	blink: true;
+}
+
+case-indicator {
+	background-color: @transparent;
+	text-color: @fg;
+	vertical-align: 0.5;
+	horizontal-align: 0.5;
+}
+
+entry-wrapper {
+	orientation: horizontal;
+	vertical-align: 0.5;
+	spacing: 4px;
+	background-color: @transparent;
+	children: [ button, entry, case-indicator ];
+}
+
+inputbar {
+	background-color: @bg-search;
+	text-color: @fg;
+	expand: false;
+	border-radius: 6px;
+	padding: 10px 10px 10px 10px;
+	position: north;
+	children: [ entry-wrapper ];
+}
+
+listview {
+	background-color: @transparent;
+	spacing: 15px;
+  dynamic: true;
+  lines: 8;
+}
+
+mainbox {
+  background-color: @bg;
+  border-radius: 6px;
+	children: [ inputbar, listview ];
+	spacing: 25px;
+}
+
+element {
+	background-color: @transparent;
+	text-color: @fg;
+	/* orientation: vertical; */
+	border-radius: 6px;
+	padding: 8px 14px 8px 14px;
+}
+
+element-icon {
+	size: 36px;
+	border: 0;
+}
+
+element-text {
+	expand: true;
+  margin: 0 10px 0 10px;
+  vertical-align: 0.5;
+}
+
+element selected {
+	background-color: @selected;
+	text-color: @fg;
+}

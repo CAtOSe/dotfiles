@@ -25,15 +25,7 @@ client.connect_signal("request::titlebars", function(c)
 
     local titlebar_middle = { -- Middle
         nil,
-        wibox.widget {
-            {
-                awful.titlebar.widget.iconwidget(c),
-                awful.titlebar.widget.titlewidget(c),
-                spacing = 12,
-                layout = wibox.layout.fixed.horizontal
-            },
-            widget = wibox.container.background
-        },
+        awful.titlebar.widget.titlewidget(c),
         buttons = mouse_keys,
         expand = "outside",
         layout = wibox.layout.align.horizontal
@@ -62,7 +54,7 @@ client.connect_signal("request::titlebars", function(c)
 
     -- Set up a titlebar
     awful.titlebar(c, {
-        size = 24
+        size = dpi(28)
     }) : setup {
         nil,
         titlebar_middle,

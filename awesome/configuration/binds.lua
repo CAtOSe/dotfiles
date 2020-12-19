@@ -24,15 +24,14 @@ globalkeys = gears.table.join(
 	          { description = "open terminal", group = "launcher"}),
 
 	-- Open Launcher (user-config.lua)  Mod + Enter
-	awful.key({ modkey, }, "d", function () awful.spawn(app_launcher) end,
+	awful.key({ modkey, }, "d", function () awful.spawn(app_run) end,
 			  { description = "open launcher", group = "launcher"}),
 			  
 	-- Switch focus to last client  Mod + Tab
-	awful.key({ modkey, }, "Tab", function () 
-		awful.client.focus.history.previous()
-
-		if client.focus then
-			client.focus:raise()
+	awful.key({ modkey, }, "Tab", function ()
+    awful.client.focus.byidx(-1)
+    if client.focus then
+      client.focus:raise()
 		end
 	end,
 	{ description = "focus last client", group = "awesome"}),
@@ -43,7 +42,19 @@ globalkeys = gears.table.join(
 			client.focus:kill()
 		end
 	end,
-	{ description = "kill client", group = "awesome"})
+	{ description = "kill client", group = "awesome"}),
+
+	-- Media Play/Pause
+	awful.key({ }, "XF86AudioPlay", function () awful.spawn(media_controls.playpause) end,
+	{ description = "Play / Pause", group = "media"}),
+
+	-- Media Next
+	awful.key({ }, "XF86AudioNext", function () awful.spawn(media_controls.next)  end,
+	{ description = "Next track", group = "media"}),
+
+	-- Media Prev
+	awful.key({ }, "XF86AudioPrev", function () awful.spawn(media_controls.prev)  end,
+	{ description = "Previous track", group = "media"})
 )
 
 

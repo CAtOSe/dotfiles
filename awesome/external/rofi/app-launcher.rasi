@@ -1,0 +1,143 @@
+configuration {
+	font: "Inter Regular 10";
+	show-icons: true;
+	drun-display-format: "{name}";
+	threads: 0;
+	matching: "fuzzy";
+	scroll-method: 0;
+	disable-history: false;
+	fullscreen: true;
+	window-thumbnail: true;
+}
+
+* {
+  transparent: #00000000;
+  fg: #fefefeff;
+  bg-white: #96C1D9AA;
+  bg: #424B59AA;
+  selected: #988FCFAA;
+}
+
+window {
+  transparency: "real";
+  background-color: @transparent;
+  text-color: @fg; 
+}
+
+prompt {
+  enabled: false;
+}
+
+button {
+	action: "ok";
+	str: "";
+	font: "Material Icons 14";
+	expand: false;
+	text-color: @fg;
+	background-color: @transparent;
+	vertical-align: 0.7;
+	horizontal-align: 0.5;
+}
+
+entry {
+	font: "Inter Regular 11";
+	background-color: @transparent;
+	text-color: @fg;
+	expand: true;
+	vertical-align: 0.5;
+	horizontal-align: 0.5;
+	placeholder: "Type to search";
+	placeholder-color: @fg;
+	blink: true;
+}
+
+case-indicator {
+	background-color: @transparent;
+	text-color: @fg;
+	vertical-align: 0.5;
+	horizontal-align: 0.5;
+}
+
+entry-wrapper {
+	orientation: horizontal;
+	vertical-align: 0.5;
+	spacing: 4px;
+	background-color: @transparent;
+	children: [ button, entry, case-indicator ];
+}
+
+inputbar {
+	background-color: @bg-white;
+	text-color: @fg;
+	expand: false;
+	border-radius: 6px;
+  margin: 0px 500px 0px 500px;
+	padding: 10px 10px 10px 10px;
+	position: north;
+	children: [ entry-wrapper ];
+}
+
+listview {
+	background-color: @transparent;
+	columns: 6;
+	spacing: 5px;
+	cycle: false;
+	dynamic: true;
+	layout: vertical;
+}
+
+mainbox {
+	background-color: @bg;
+	children: [ inputbar, listview ];
+	spacing: 25px;
+	padding: 70px 15% 0 15%;
+	/*padding: 70px 135px 0 135px;*/
+}
+
+element {
+	background-color: @transparent;
+	text-color: @fg;
+	orientation: vertical;
+	border-radius: 12px;
+	padding: 25px 0 25px 0;
+}
+
+element-icon {
+	size: 72px;
+	border: 0;
+}
+
+element-text {
+	expand: true;
+	horizontal-align: 0.5;
+	vertical-align: 0.5;
+	margin: 0 10px 0 10px;
+}
+
+element normal.urgent,
+element alternate.urgent {
+	/* background-color: @urgent; */
+	text-color: @fg;
+	border-radius: 9px;
+}
+
+element normal.active,
+element alternate.active {
+	/* background-color: @background-active; */
+	text-color: @fg;
+}
+
+element selected {
+	background-color: @selected;
+	text-color: @fg;
+}
+
+element selected.urgent {
+	/* background-color: @urgent-selected; */
+	text-color: @fg;
+}
+
+element selected.active {
+	/* background-color: @background-active; */
+	color: @fg-selected;
+}

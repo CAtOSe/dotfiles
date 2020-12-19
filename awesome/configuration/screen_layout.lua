@@ -34,3 +34,11 @@ awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
     awful.tag({ "1", "2", "3", "4" }, s, awful.layout.layouts[1])
 end)
+
+-- No offscreen clients
+client.connect_signal(
+	'manage',
+	function(c)
+		awful.placement.no_offscreen(c)
+	end
+)

@@ -5,6 +5,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
+local beautiful = require('beautiful')
 local apps = require("configuration.apps")
 
 -- =========================
@@ -12,8 +13,6 @@ local apps = require("configuration.apps")
 -- =========================
 awesome.set_preferred_icon_size(48)
 dock_screen = 1
-
-
 
 -- Predefine indicators
 local active_ind_path = "/home/paul/.config/awesome/visuals/icons/dock_ind_active.svg"
@@ -154,6 +153,7 @@ end
 local function create_icon(class)
     local icon = {
         layout = wibox.layout.fixed.vertical,
+        spacing = dpi(2)
     }
 
     if (apps.app_icons[class] ~= nil) then
@@ -161,16 +161,16 @@ local function create_icon(class)
         local icon_box = {
             image  = apps.app_icons[class], -- Path to app icon
             resize = true,
-            forced_height = 48,
-            forced_width = 48,
+            forced_height = dpi(36),
+            forced_width = dpi(36),
             widget = wibox.widget.imagebox
         }
         table.insert(icon, icon_box)
     else
         -- Use the icon provided by the client
         local icon_box = {
-            forced_height = 48,
-            forced_width = 48,
+            forced_height = dpi(36),
+            forced_width = dpi(36),
             widget = awful.widget.clienticon(app_cache[class].clients[1]),
         }
         table.insert(icon, icon_box)
@@ -183,8 +183,8 @@ local function create_icon(class)
         {
             image = none_ind_path,
             resize = true,
-            forced_height = 4,
-            forced_width = 4,
+            forced_height = dpi(4),
+            forced_width = dpi(4),
             widget = wibox.widget.imagebox
         }
     }
@@ -194,17 +194,32 @@ local function create_icon(class)
         if (#app_cache[class].clients > 0) then 
             if (app_cache[class].class == focused_client_class) then
                 ind[2].image = active_ind_path
-                table.insert(icon, ind)
             else
                 ind[2].image = inactive_ind_path
-                table.insert(icon, ind)
             end
-        else table.insert(icon, ind)
         end
-    else table.insert(icon, ind)
     end
+    table.insert(icon, ind)
 
-    local w = wibox.widget(icon)
+    local w = wibox.widget({
+        {
+            icon,
+            top = dpi(4),
+            left = dpi(5),
+            right = dpi(5),
+            widget = wibox.container.margin
+        },
+        bg = "#00000000",
+        widget = wibox.container.background
+    })
+
+    w:connect_signal("mouse::enter", function(w) 
+        w.bg = beautiful.bar_bg_focus
+    end)
+
+    w:connect_signal("mouse::leave", function(w) 
+        w.bg = "#00000000"
+    end)
 
     -- Add mouse binds
     w:buttons(gears.table.join(
@@ -242,10 +257,10 @@ end
 
 -- Updates the icon without rebuilding it
 local function update_icon(s, class)
-    local icon_layout = s.dock_bar.widget.second.widget
+    local icon_layout = s.dock_bar.widget.second
     local index = find_pos(class)
     if index > 0 then
-        local ind = icon_layout.children[index].children[2].second -- Select indicator widget
+        local ind = icon_layout.children[index].widget.widget.children[2].second -- Select indicator widget
         
         if app_cache[class].clients == nil then
             -- Remove indicator
@@ -268,16 +283,16 @@ end
 local function update_dock_width(s)
     local dock_bar = s.dock_bar
     local c = #class_cache
-    local width = 48 * c + (c+1) * 5
-    -- 48 (icon size) * client count   +
-    -- 5 (space size) * (client count + 1)  +
+    local width = dpi(36) * c + (c) * dpi(10)
+    -- 36 (icon size) * client count
+    -- 10 (space size) * (client count)
     dock_bar.width = width
 end
 
 
 -- Adds app to the correct table and adds icon to dock
 local function add_app(s, c)
-    local icon_layout = s.dock_bar.widget.second.widget
+    local icon_layout = s.dock_bar.widget.second
 
     -- Check if client should be in the dock
     if not (c.skip_taskbar) then
@@ -311,14 +326,13 @@ local function remove_app(s, c)
         return
     end
     
-    local icon_layout = s.dock_bar.widget.second.widget
+    local icon_layout = s.dock_bar.widget.second
     get_focused_class()
 
     -- Update clients
     update_app(c.class)
-    
-    if (app_cache[c.class].pinned or #app_cache[c.class].clients > 1) then
-        -- App is pinned or has more than 1 window open
+    if (app_cache[c.class].pinned or #app_cache[c.class].clients > 0) then
+        -- App is pinned or still has windows open
         -- Do not remove icon from the dock, just update it
         update_icon(s, c.class)
     else
@@ -337,7 +351,7 @@ end
 
 -- Recalculates items and redraws the dock
 local function rebuild_dock_items(s)
-    local dock_items_widget = s.dock_bar.widget.second.widget
+    local dock_items_widget = s.dock_bar.widget.second
     dock_items_widget:reset()
 
     class_cache = {}
@@ -366,28 +380,24 @@ function create_dock(s)
         screen = s,
         stretch = false,
         ontop = true,
-        height = 56
+        height = dpi(50),
+        border_width = beautiful.bar_border,
+        border_color = beautiful.bar_border_bg,
+        shape = function(cr, w, h)
+		    gears.shape.partially_rounded_rect(cr, w, h, true, true, false, false, beautiful.bar_radius)
+		end
     })
 
     -- Item (icon) host layout
     local dock_items = {
         layout = wibox.layout.fixed.horizontal,
-        spacing = 5,
-        {
-            markup = "Sample Text",
-            widget = wibox.widget.textbox
-        }
     }
 
     s.dock_bar:setup {
         layout = wibox.layout.align.horizontal,
         expand = "outside",
         nil, -- Left
-        {
-            widget = wibox.container.margin,
-            top = 1,
-            dock_items,
-        }
+        dock_items
     }
 
     -- Build caches
@@ -429,6 +439,8 @@ client.connect_signal("focus", function (c)
         get_focused_class()
         update_icon(screen[dock_screen], focused_client_class)
         app_cache[c.class].last_focused = c.pid
+    else
+        -- add_app(screen[dock_screen], c)
     end
 end)
 
@@ -445,3 +457,41 @@ end)
 client.connect_signal("request::urgent", function(c)
     -- update_client(c)
 end)
+
+-- Fullscreen hides dock
+tag.connect_signal(
+	'property::selected',
+    function(t)
+        if t.screen.dock_bar ~= nil then
+            fullscreen = false
+
+            cls = t:clients()
+            for _,c in pairs(cls) do
+                if c.fullscreen then
+                    fullscreen = true
+                    break
+                end
+            end
+
+            t.screen.dock_bar.visible = not fullscreen
+        end
+	end
+)
+
+client.connect_signal(
+	'property::fullscreen',
+    function(c)
+        if c.screen.dock_bar ~= nil then
+            c.screen.dock_bar.visible = not c.fullscreen
+        end
+	end
+)
+
+client.connect_signal(
+	'unmanage',
+	function(c)
+		if c.fullscreen and c.screen.dock_bar ~= nil then
+            c.screen.dock_bar.visible = not c.fullscreen
+		end
+	end
+)
